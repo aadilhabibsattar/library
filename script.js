@@ -26,10 +26,38 @@ addBookToLibrary("Cant Hurt Me", 'David Goggins', '200', true);
 addBookToLibrary('The 4-Hour Workweek', 'Tim Ferris', '180', false);
 console.log(myLibrary)
 
-const bookContainer = document.querySelector('.book-container');
+const library = document.querySelector('.library');
 
 myLibrary.forEach((book) => {
-    bookContainer.innerHTML += `
-        ${book.title} <br> ${book.author} <br> ${book.pages} <br> ${isRead ? 'Read' : 'Not Read'} <br>
+    library.innerHTML += `
+        <div class="book-container">
+            <h2>${book.title}</h2>
+            <p><span class="book-label">Author:</span> ${book.author}</p>
+            <p><span class="book-label">Pages:</span> ${book.pages}</p>
+            <button class="book-btn read-btn not-read">${isRead ? 'Read' : 'Not Read'}</button>
+            <button class="book-btn delete-btn">Remove</button>
+        </div>
     `
+})
+
+const readButtons = document.querySelectorAll('.read-btn');
+const deleteButtons = document.querySelectorAll('.delete-btn');
+const addBookButton = document.querySelector('.add-book-btn');
+
+readButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        button.classList.toggle('is-read')
+        button.textContent = button.textContent === 'Not Read' ? 'Read' : 'Not Read';
+    })
+})
+
+deleteButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+        const bookContainer = e.target.closest('.book-container');
+        const bookId = bookContainer.dataset.id;
+        const bookIndex = myLibrary.findIndex(book => book.id === bookId)
+        myLibrary.splice(bookIndex, 1);
+
+        bookContainer.remove();
+    })
 })
