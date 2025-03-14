@@ -12,6 +12,19 @@
         <h1>Library</h1>
         <button class="add-book-btn">Add Book</button>
     </div>
+
+    <dialog class="add-book-dialog">
+        <form class="add-book-form">
+            <label class="form-label">Title: <input class="form-input title-input" type="text" required></label>
+            <label class="form-label">Author: <input class="form-input author-input" type="text" required></label>
+            <label class="form-label">Pages: <input class="form-input pages-input" type="number" required></label>
+            <label>Read: <input class="read-input" type="checkbox"></label>
+            
+            <button type="submit" class="form-btn submit-dialog-btn">Submit</button>
+            <button type="button" class="form-btn close-dialog-btn">Close</button>
+        </form>
+    </dialog>
+
     <section>
     <div class="main-section">
         <div class="library"></div>
