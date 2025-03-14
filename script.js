@@ -74,7 +74,6 @@ library.addEventListener('click', (event) => {
     }
 });
 
-//! Add book form
 const addBookDialog = document.querySelector('.add-book-dialog')
 const submitDialogButton = document.querySelector('.submit-dialog-btn')
 const addBookButton = document.querySelector('.add-book-btn');
