@@ -1,41 +1,20 @@
-const myLibrary = [];
-
-class Book {
-  constructor(title, author, pages, isRead) {
-    this.id = crypto.randomUUID();
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.isRead = isRead;
+class Library {
+  constructor(libraryName) {
+    this.libraryName = libraryName;
   }
-}
-// function Book(title, author, pages, isRead) {
-//    this.id = crypto.randomUUID();
-//    this.title = title;
-//    this.author = author;
-//    this.pages = pages;
-//    this.isRead = isRead;
-// }
 
-Book.prototype.toggleRead = function () {
-  this.isRead = !this.isRead;
-  return this.isRead;
-};
+  addBookToLibrary(newBook) {
+    this.libraryName.push(newBook);
+  }
 
-function addBookToLibrary(title, author, pages, isRead) {
-  const newBook = new Book(title, author, pages, isRead);
-  myLibrary.push(newBook);
-}
+  createBook(title, author, pages, isRead) {
+    const newBook = new Book(title, author, pages, isRead);
+    return newBook;
+  }
 
-addBookToLibrary("Atomic Habits", "James Clear", "250", true);
-addBookToLibrary("The Hobbit", "J.R.R Tolkien", "500", false);
-addBookToLibrary("The 4-Hour Workweek", "Tim Ferris", "180", false);
-
-const library = document.querySelector(".library");
-
-function displayLibrary() {
-  myLibrary.forEach((book) => {
-    library.innerHTML += `
+  displayLibrary() {
+    this.libraryName.forEach((book) => {
+      libraryContainer.innerHTML += `
             <div class="book-container" data-id="${book.id}">
                 <h2>${book.title}</h2>
                 <p><span class="book-label">Author:</span> ${book.author}</p>
@@ -46,15 +25,56 @@ function displayLibrary() {
                 <button class="book-btn delete-btn">Remove</button>
             </div>
         `;
-  });
+    });
+  }
+
+  createInitialBooks() {
+    this.addBookToLibrary(
+      this.createBook("Atomic Habits", "James Clear", "250", true)
+    );
+    this.addBookToLibrary(
+      this.createBook("The Hobbit", "J.R.R Tolkien", "500", false)
+    );
+    this.addBookToLibrary(
+      this.createBook("Influence", "Robert Cialdini", "180", false)
+    );
+  }
 }
 
-displayLibrary();
+class Book {
+  constructor(title, author, pages, isRead) {
+    this.id = crypto.randomUUID();
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.isRead = isRead;
+  }
 
+  toggleRead() {
+    this.isRead = !this.isRead;
+    return this.isRead;
+  }
+}
+
+const myLibrary = [];
+const library = new Library(myLibrary);
+
+//! DOM Elements
+const libraryContainer = document.querySelector(".library");
 const readButtons = document.querySelectorAll(".read-btn");
 const deleteButtons = document.querySelectorAll(".delete-btn");
+const addBookDialog = document.querySelector(".add-book-dialog");
+const submitDialogButton = document.querySelector(".submit-dialog-btn");
+const addBookButton = document.querySelector(".add-book-btn");
+const closeDialogButton = document.querySelector(".close-dialog-btn");
+const formInputs = document.querySelectorAll(".form-input");
+const titleInput = document.querySelector(".title-input");
+const authorInput = document.querySelector(".author-input");
+const pagesInput = document.querySelector(".pages-input");
+const readStatus = document.querySelector(".read-input");
 
-library.addEventListener("click", (event) => {
+//! Event Listeners
+libraryContainer.addEventListener("click", (event) => {
   const target = event.target;
 
   if (target.classList.contains("read-btn")) {
@@ -83,17 +103,6 @@ library.addEventListener("click", (event) => {
   }
 });
 
-const addBookDialog = document.querySelector(".add-book-dialog");
-const submitDialogButton = document.querySelector(".submit-dialog-btn");
-const addBookButton = document.querySelector(".add-book-btn");
-const closeDialogButton = document.querySelector(".close-dialog-btn");
-
-const formInputs = document.querySelectorAll(".form-input");
-const titleInput = document.querySelector(".title-input");
-const authorInput = document.querySelector(".author-input");
-const pagesInput = document.querySelector(".pages-input");
-const readStatus = document.querySelector(".read-input");
-
 addBookButton.addEventListener("click", () => {
   addBookDialog.showModal();
 });
@@ -103,16 +112,16 @@ submitDialogButton.addEventListener("click", (event) => {
   const title = titleInput.value;
   const author = authorInput.value;
   const pages = pagesInput.value;
-
-  addBookToLibrary(title, author, pages, readStatus.checked);
+  const newBook = library.createBook(title, author, pages, readStatus.checked);
+  library.addBookToLibrary(newBook);
 
   titleInput.value = "";
   authorInput.value = "";
   pagesInput.value = "";
   readStatus.checked = false;
 
-  library.innerHTML = "";
-  displayLibrary();
+  libraryContainer.innerHTML = "";
+  library.displayLibrary();
 
   addBookDialog.close();
 });
@@ -120,3 +129,7 @@ submitDialogButton.addEventListener("click", (event) => {
 closeDialogButton.addEventListener("click", () => {
   addBookDialog.close();
 });
+
+//* Display the initial library
+library.createInitialBooks();
+library.displayLibrary();
